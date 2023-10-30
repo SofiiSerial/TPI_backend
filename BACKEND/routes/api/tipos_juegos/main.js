@@ -4,12 +4,12 @@ var con = require('../conexion');
 
 router.get("/",function(req, res, next){
 
-    const sql = 'SELECt * FROM personas_juegos';
+    const sql = 'SELECt * FROM tipos_juegos';
     con.query(sql,function(error, result){
 
         res.json({
-            status:"personas_juegos",
-            personas_juegos:result
+            status:"tipos_juegos",
+            tipos_juegos:result
             
         })
         
@@ -18,12 +18,12 @@ router.get("/",function(req, res, next){
 })
 
 router.post("/",function(req, res, next){
-    const {id_juegos, DNI_participante, participo} = req.body
-    console.log({id_juegos, DNI_participante, participo });
+    const {id, deporte, descripcion} = req.body
+    console.log({ id, deporte, descripcion });
 
-    const sql = 'INSERT INTO personas_juegos (id_juegos, DNI_participante, participo ) VALUES ( ?, ?, ?)'
+    const sql = 'INSERT INTO tipos_juegos (id, deporte, descripcion ) VALUES ( ?, ?, ?)'
 
-    con.query(sql, [id_juegos, DNI_participante, participo ], function(error, result){
+    con.query(sql, [id, deporte, descripcion ], function(error, result){
         if(error){
             res.json({
           status:"error",
@@ -32,19 +32,19 @@ router.post("/",function(req, res, next){
        
         } else {
             res.json({
-                status:"personas_juegos",
-                msj:{id_juegos, DNI_participante, participo }
+                status:"tipos_juegos",
+                msj:{id, deporte, descripcion }
             })
         }
     })
 })
 
 router.put("/",function(req, res, next){
-    const {personas_juegos} = req.query;
-    const {id_juegos, DNI_participante, participo  } = req.body;
-    const sql = 'UPDATE personas_juegos SET Telefono = ?, Tipo = ? WHERE ID_personas_juegos = ?'
+    const {tipos_juegos} = req.query;
+    const {id, deporte, descripcion  } = req.body;
+    const sql = 'UPDATE tipos_juegos SET Telefono = ?, Tipo = ? WHERE ID_tipos_juegos = ?'
 
-    con.query(sql, [id_juegos, DNI_participante, participo, personas_juegos], function(error, result){
+    con.query(sql, [id, deporte, descripcion, tipos_juegos], function(error, result){
         if(error){
             res.json({
           status:"error",
@@ -53,8 +53,8 @@ router.put("/",function(req, res, next){
        
         } else {
             res.json({
-                status:"personas_juegos",
-                msj:{id_juegos, DNI_participante, participo }
+                status:"tipos_juegos",
+                msj:{id, deporte, descripcion }
             })
         }
     })

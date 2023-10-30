@@ -1,24 +1,29 @@
 var express = require('express');
 var router = express.Router();
 
-var juegosRouter = require('./juegos/main');
 var usuariosRouter = require('./usuarios/main');
-var personas_juegosRouter = require('./personas_juegos/main');
-var consultarColorRouter = require('./consultarColor/main');
-
-//http://localhost:3203/api/juegos
-router.use("/juegos",juegosRouter)
+/*
+var juegosRouter = require('./juegos/main');
+var tipos_juegosRouter = require('./tipos_juegos/main');
+var coloresRouter = require('./colores/main');
+var puntajesRouter = require('./puntajes/main');
+*/
+//http://localhost:3203/api/tipos_juegos
+//router.use("/tipos_juegos",tipos_juegosRouter)
 
 //http://localhost:3203/api/usuarios
 router.use("/usuarios",usuariosRouter)
+/*
+//http://localhost:3203/api/juegos
+router.use("/juegos",juegosRouter)
 
-//http://localhost:3203/api/personas_juegos
-router.use("/personas_juegos",personas_juegosRouter)
+//http://localhost:3203/api/colores
+router.use("/colores",coloresRouter)
 
-//http://localhost:3203/api/consultarColor
-router.use("/consultarColor",consultarColorRouter)
+//http://localhost:3203/api/puntejes
+router.use("/puntajes",puntajesRouter)
 
-
+*/
 
 
 module.exports = router;

@@ -1,29 +1,29 @@
 var express = require('express');
-var router = express.Router();
 var con = require('../conexion');
+var router = express.Router();
 
 router.get("/",function(req, res, next){
 
-    const sql = 'SELECt * FROM juegos';
+    const sql = 'SELECT * FROM colores';
     con.query(sql,function(error, result){
 
         res.json({
-            status:"juegos",
-            pasientes:result
+            status:"colores",
+            colores:result
             
         })
         
     })
-    //SQL listado de Paciente
+    //SQL listado de colores
 })
 
 router.post("/",function(req, res, next){
-    const { id_juegos, deporte, dia, hora, lugar, ganador } = req.body
-    console.log({  id_juegos, deporte, dia, hora, lugar, ganador});
+    const {descripcion, tipo} = req.body
+    console.log({descripcion, tipo});
 
-    const sql = 'INSERT INTO juegos ( id_juegos, deporte, dia, hora, lugar, ganador) VALUES (?, ?, ?)'
+    const sql = 'INSERT INTO colores (descripcion, tipo) VALUES (?, ?)'
 
-    con.query(sql, [ id_juegos, deporte, dia, hora, lugar, ganador], function(error, result){
+    con.query(sql, [descripcion, tipo], function(error, result){
         if(error){
             res.json({
           status:"error",
@@ -32,19 +32,19 @@ router.post("/",function(req, res, next){
        
         } else {
             res.json({
-                status:"juegos",
-                msj:{id_juegos, deporte, dia, hora, lugar, ganador}
+                status:"consultarColor",
+                msj:{descripcion, tipo}
             })
         }
     })
 })
 
 router.put("/",function(req, res, next){
-    const {juegos_id} = req.query;
-    const { id_juegos, deporte, dia, hora, lugar, ganador } = req.body;
-    const sql = 'UPDATE juegos SE= ?, Tipo = ? WHERE ID_juegos = ?'
+    const {consultarColor_id} = req.query;
+    const {descripcion, tipo} = req.body;
+    const sql = 'UPDATE consultarColor SET Descripcion = ?, Tipo = ? WHERE ID_consultarColor = ?'
 
-    con.query(sql, [ apellidos, nombres, DNI, juegos_id], function(error, result){
+    con.query(sql, [descripcion, tipo, consultarColor_id], function(error, result){
         if(error){
             res.json({
           status:"error",
@@ -53,8 +53,8 @@ router.put("/",function(req, res, next){
        
         } else {
             res.json({
-                status:"juegos",
-                msj:{ id_juegos, deporte, dia, hora, lugar, ganador  }
+                status:"consultarColor",
+                msj:{descripcion, tipo}
             })
         }
     })
@@ -83,7 +83,7 @@ const isAdmin = function(token){
 
 router.delete("/",function(req, res, next){
     const {token} = req.headers
-    const {juegos_id} = req.query
+    const {zona_id} = req.query
     isAdmin(token)
     .then((tipo) => {
         if (tipo === "Admin"){

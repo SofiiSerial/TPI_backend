@@ -11,10 +11,42 @@ const getToken = function(){
 
 };
 
+router.get("/buscar",function(req, res, next){
+    const {dni} = req.query
+    const sql=`SELECT U.nombre_apellido, U.dni, U.rol, C.color FROM usuarios AS U 
+    INNER JOIN colores AS C ON U.id_color = C.id_color
+    WHERE U.dni = ?`
+    con.query(sql, [dni], function(error, result){
+        if(error){
+            res.json({
+                status:"error",
+                error
+            })
+        }else{
+            
+            res.json({
+                status:"usuarios",
+                usuarios: result
+            })
+        }
+    })
+})
+
 router.get("/",function(req, res, next){
-    res.json({
-        status:"usuarios"
-        
+    const sql=`SELECT U.nombre_apellido, U.dni, U.rol, C.color FROM usuarios AS U 
+    INNER JOIN colores AS C ON U.id_color = C.id_color`
+    con.query(sql, function(error, result){
+        if(error){
+            res.json({
+                status:"error",
+                error
+            })
+        }else{
+            res.json({
+                status:"usuarios",
+                usuarios: result
+            })
+        }
     })
 })
 
