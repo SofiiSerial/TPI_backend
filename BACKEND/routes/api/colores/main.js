@@ -32,7 +32,7 @@ router.post("/",function(req, res, next){
        
         } else {
             res.json({
-                status:"consultarColor",
+                status:"colores",
                 msj:{descripcion, tipo}
             })
         }
@@ -40,11 +40,11 @@ router.post("/",function(req, res, next){
 })
 
 router.put("/",function(req, res, next){
-    const {consultarColor_id} = req.query;
+    const {colores_id} = req.query;
     const {descripcion, tipo} = req.body;
-    const sql = 'UPDATE consultarColor SET Descripcion = ?, Tipo = ? WHERE ID_consultarColor = ?'
+    const sql = 'UPDATE colores SET Descripcion = ?, Tipo = ? WHERE ID_colores = ?'
 
-    con.query(sql, [descripcion, tipo, consultarColor_id], function(error, result){
+    con.query(sql, [ colores_id, colores,], function(error, result){
         if(error){
             res.json({
           status:"error",
@@ -53,7 +53,7 @@ router.put("/",function(req, res, next){
        
         } else {
             res.json({
-                status:"consultarColor",
+                status:"colores",
                 msj:{descripcion, tipo}
             })
         }
@@ -80,9 +80,9 @@ const isAdmin = function(token){
 }
 
     
-
+/*
 router.delete("/",function(req, res, next){
-    const {token} = req.headers
+     const {token} = req.headers
     const {zona_id} = req.query
     isAdmin(token)
     .then((tipo) => {
@@ -109,6 +109,6 @@ router.delete("/",function(req, res, next){
         })
     })
     
-})
+})*/
 
 module.exports = router;

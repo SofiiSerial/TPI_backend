@@ -11,6 +11,7 @@ const getToken = function(){
 
 };
 
+//aca extraemos la informacion con el dni de la persona
 router.get("/buscar",function(req, res, next){
     const {dni} = req.query
     const sql=`SELECT U.nombre_apellido, U.dni, U.rol, C.color FROM usuarios AS U 
@@ -23,7 +24,7 @@ router.get("/buscar",function(req, res, next){
                 error
             })
         }else{
-            
+
             res.json({
                 status:"usuarios",
                 usuarios: result
@@ -31,7 +32,7 @@ router.get("/buscar",function(req, res, next){
         }
     })
 })
-
+//relacionamos la tabla colores con usuario
 router.get("/",function(req, res, next){
     const sql=`SELECT U.nombre_apellido, U.dni, U.rol, C.color FROM usuarios AS U 
     INNER JOIN colores AS C ON U.id_color = C.id_color`
