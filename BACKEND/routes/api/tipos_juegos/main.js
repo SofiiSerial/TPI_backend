@@ -10,13 +10,13 @@ const getToken = function(){
     return rand() + rand ();
 
 };
-/*
-//aca extraemos la informacion con el dni de la persona
+
+//aca extraemos la informacion con el id_tipos_juegos de la persona
 router.get("/buscar",function(req, res, next){
-    const {deporte} = req.query
-    const sql=`SELECT T.id, T.deporte, T.descripcion, T.juegos FROM tipos_juegos AS T
-    INNER JOIN juegos AS J ON J.deportes T.id_tipo = J.deportes WHERE U.dni = ? `
-    con.query(sql, [deporte], function(error, result){
+    const {id} = req.query
+    const sql=`SELECT T.id, T.id, T.descripcion, T.juegos FROM tipos_juegos AS T
+    INNER JOIN juegos AS J ON J.id T.id_tipo = J.id WHERE T.juegos = ? `
+    con.query(sql, [id], function(error, result){
         if(error){
             res.json({
                 status:"error",
@@ -31,11 +31,11 @@ router.get("/buscar",function(req, res, next){
         }
     })
 })
-*/
+
 
 //relacionamos la tabla colores con usuario
 router.get("/",function(req, res, next){
-    const sql=`SELECT T.id, T.deporte, T.descripcion, T.juegos FROM tipos_juegos AS T
+    const sql=`SELECT T.id, T.id, T.descripcion, T.juegos FROM tipos_juegos AS T
     INNER JOIN juegos AS J ON J.id T.id_tipo = J.id`
     con.query(sql, function(error, result){
         if(error){
@@ -51,3 +51,5 @@ router.get("/",function(req, res, next){
         }
     })
 })
+
+module.exports = router;
