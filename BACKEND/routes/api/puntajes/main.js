@@ -19,11 +19,11 @@ const getToken = function(){
 SELECT id_color , SUM(puntaje) FROM `puntaje` WHERE id_color = 3; 
 */
 
-router.get("/buscar",function(req, res, next){
-    const {puntaje} = req.query
+router.get("/",function(req, res, next){
+    //const {id_color} = req.query
     const sql=`SELECT C.color, SUM(puntaje.puntaje) as "puntaje" FROM "puntaje"
     INNER JOIN colores AS C ON puntaje.id_color = C.id_color GROUP BY puntaje.id_color;`
-    con.query(sql, [puntaje], function(error, result){
+    con.query(sql, [], function(error, result){
         if(error){
             res.json({
                 status:"error",
