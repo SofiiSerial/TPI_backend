@@ -80,35 +80,6 @@ const isAdmin = function(token){
 }
 
     
-/*
-router.delete("/",function(req, res, next){
-     const {token} = req.headers
-    const {zona_id} = req.query
-    isAdmin(token)
-    .then((tipo) => {
-        if (tipo === "Admin"){
-                res.json({
-              status:"ok",
-                 msj:"Eliminar"
-                })  
-           
-            } else {
-                res.json({
-                    status:"error",
-                    error:"sin autorizacion"
-                })
-         } 
-    })
 
-    .catch((error) => {
-
-        res.json({
-            status:"error",
-            error
-            
-        })
-    })
-    
-})*/
 
 module.exports = router;
