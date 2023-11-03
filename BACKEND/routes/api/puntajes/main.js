@@ -18,6 +18,26 @@ const getToken = function(){
 
 SELECT id_color , SUM(puntaje) FROM `puntaje` WHERE id_color = 3; 
 */
+router.get("/buscar",function(req, res, next){
+    const {dni} = req.query
+    const sql=`SELECT C.color, SUM(puntaje.puntaje) as "puntaje" FROM "puntaje"
+    INNER JOIN colores AS C ON puntaje.id_color = C.id_color GROUP BY puntaje.id_color;
+    WHERE P.id_color = ?`
+    con.query(sql, [dni], function(error, result){
+        if(error){
+            res.json({
+                status:"error",
+                error
+            })
+        }else{
+
+            res.json({
+                status:"usuarios",
+                usuarios: result
+            })
+        }
+    })
+})
 
 router.get("/",function(req, res, next){
     //const {id_color} = req.query
