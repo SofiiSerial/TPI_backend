@@ -40,11 +40,11 @@ router.post("/",function(req, res, next){
 })
 
 router.put("/",function(req, res, next){
-    const {colores_id} = req.query;
-    const {descripcion, tipo} = req.body;
-    const sql = 'UPDATE colores SET Descripcion = ?, Tipo = ? WHERE ID_colores = ?'
+    const {id_color} = req.query;
+    const {color} = req.body;
+    const sql = 'UPDATE colores SET color = ? WHERE id_color = ?'
 
-    con.query(sql, [ colores_id, colores,], function(error, result){
+    con.query(sql, [ color, id_color], function(error, result){
         if(error){
             res.json({
           status:"error",
