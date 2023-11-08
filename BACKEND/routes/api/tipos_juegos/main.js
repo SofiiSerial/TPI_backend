@@ -52,9 +52,9 @@ router.get("/",function(req, res, next){
     })
 })
 
-router.post("/guardarjuegos",function(req, res, next){
+router.post("/",function(req, res, next){
     const {deporte, descripcion} = req.body
-    const sql = `INSERT INTO puntajes (deporte, descripcion) VALUES (?, ? )`
+    const sql = `INSERT INTO tipos_juegos (deporte, descripcion) VALUES (?, ?)`
 
     con.query(sql, [deporte, descripcion ], function(error, result){
         if(error){

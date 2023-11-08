@@ -2,6 +2,26 @@ var express = require('express');
 var router = express.Router();
 var con = require('../conexion');
 
+
+const isAdmin = function(token){
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT tipo FROM Usuarios WHERE token = ?';
+        con.query(sql, [token], function(error, result, cant){
+
+            if(error){
+                reject(error);  
+        
+            } else {
+
+                if (result.length === 0)return( reject("No existe"));
+                resolve(result[0].tipo); 
+            
+            }
+
+        })
+    })
+}
+
 const rand = function(){
     return Math.random().toString(36).substr(2);
 };
@@ -13,25 +33,31 @@ const getToken = function(){
 
 //aca extraemos la informacion con el dni de la persona
 router.get("/buscar",function(req, res, next){
-    const {dni} = req.query
-    const sql=`SELECT U.nombre_apellido, U.dni, U.rol, C.color FROM usuarios AS U 
-    INNER JOIN colores AS C ON U.id_color = C.id_color
-    WHERE U.dni = ?`
-    con.query(sql, [dni], function(error, result){
-        if(error){
-            res.json({
-                status:"error",
-                error
-            })
-        }else{
+    const {dni} = req.query 
+    const {token} = req.headers
+    isAdmin(token)
+    .then((tipo) => {
+        const sql=`SELECT U.nombre_apellido, U.dni, U.rol, C.color FROM usuarios AS U 
+        INNER JOIN colores AS C ON U.id_color = C.id_color
+        WHERE U.dni = ?`
+        con.query(sql, [dni], function(error, result){
+            if(error){
+                res.json({
+                    status:"error",
+                    error
+                })
+            }else{
 
-            res.json({
-                status:"usuarios",
-                usuarios: result
-            })
-        }
-    })
+                res.json({
+                    status:"usuarios",
+                    usuarios: result
+                })
+            }
+        })
+     })
 })
+
+
 //relacionamos la tabla colores con usuario
 router.get("/",function(req, res, next){
     const sql=`SELECT U.nombre_apellido, U.dni, U.rol, C.color FROM usuarios AS U 
@@ -50,7 +76,7 @@ router.get("/",function(req, res, next){
         }
     })
 })
-
+/*
 const getUsuario = function(user, pass){
     return new Promise((resolve, reject) => {
         const sql = 'SELECT * FROM Usuarios WHERE Nombre_usuario = ? AND Contraseña = ?';
@@ -61,7 +87,7 @@ const getUsuario = function(user, pass){
         })
     })
 }
-
+*/
 const setToken = function(ID_usuario, newToken){
     return new Promise((resolve, reject) =>{
         const sql = 'UPDATE Usuarios SET token = ? WHERE ID_usuarios = ?';
@@ -72,9 +98,66 @@ const setToken = function(ID_usuario, newToken){
     })
 }
 
+
+router.post("/",function(req, res, next){
+    const { color} = req.body
+    console.log({ color});
+    const {token} = req.headers
+    isAdmin(token)
+    .then((tipo) => {
+        if (tipo === "Admin"){
+
+            const sql = 'INSERT INTO colores ( color) VALUES (?)'
+            
+            con.query(sql, [ color], function(error, result){
+                if(error){
+                    res.json({
+                        status:"error",
+                        error  
+                    })  
+           
+                } else {
+                    res.json({
+                        status:"colores",
+                        msj:{ color}
+                    })
+                }
+            })
+        }
+    })
+    .catch((error)=> {
+        res.json({
+            status:"error",
+            error  
+        })  
+    }) 
+    
+})
+
+router.put("/",function(req, res, next){
+    const {id_color} = req.query;
+    const {color} = req.body;
+    const sql = 'UPDATE colores SET color = ? WHERE id_color = ?'
+
+    con.query(sql, [ color, id_color], function(error, result){
+        if(error){
+            res.json({
+          status:"error",
+             error  
+            })  
+       
+        } else {
+            res.json({
+                status:"colores",
+                msj:{descripcion, tipo}
+            })
+        }
+    })
+})
+
+/*
 router.post("/login",function(req, res, next){
     const{user, pass} = req.body;
-    //validar contra la UB user y pass
     getUsuario(user, pass)
     .then(async (user)=> {
         const newToken = getToken();
@@ -95,4 +178,5 @@ router.post("/login",function(req, res, next){
 })
    
 
+*/
 module.exports = router;
