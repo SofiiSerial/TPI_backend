@@ -19,10 +19,11 @@ const getToken = function(){
 SELECT id_color , SUM(puntaje) FROM `puntaje` WHERE id_color = 3; 
 */
 
+/*
 const guardarPuntaje = function (id_juego, color_id, puntaje){
     return new Promise((resolve, reject) => {
         // sql insert 
-       const sql = "INSERT INTO puntaje (id_juegos, id_color, puntaje) VALUES (?, ?, ?)"
+       const sql = "INSERT INTO puntajes (id_juegos, id_color, puntaje) VALUES (?, ?, ?)"
        con.query(sql, [id_juego, color_id, puntaje], function(error, result){
             if(error){
                 res.json({
@@ -38,19 +39,12 @@ const guardarPuntaje = function (id_juego, color_id, puntaje){
             }
         })
     })
-}
+}*/
 
-
-router.post("/",function(req, res, next){
-    const {id_juego, color1_id, color1_puntaje, color2_id, color2_puntaje, color3_id, color3_puntaje} = req.body
-    //llamar guardar puntaje para cada color
-
-
-})
-
+ //llamar guardar puntaje para cada color
 router.get("/buscar",function(req, res, next){
     const {} = req.query
-    const sql=`SELECT C.color, SUM(P.puntaje) as puntaje1" FROM puntaje
+    const sql=`SELECT C.color, SUM(P.puntaje) as puntaje1" FROM puntajes
     INNER JOIN colores AS C ON P.id_color = C.id_color GROUP BY P.id_color;
     WHERE P.id_color = ?`
     con.query(sql, [], function(error, result){
@@ -71,7 +65,7 @@ router.get("/buscar",function(req, res, next){
 
 router.get("/",function(req, res, next){
     //const {} = req.query
-    const sql=`SELECT C.color, SUM(P.puntaje) as puntaje FROM puntaje AS P
+    const sql=`SELECT C.color, SUM(P.puntaje) as puntajes FROM puntajes AS P
     INNER JOIN colores AS C ON P.id_color = C.id_color GROUP BY P.id_color;`
     con.query(sql, [], function(error, result){
         if(error){
@@ -89,5 +83,26 @@ router.get("/",function(req, res, next){
     })
 })
 
+router.post("/guardarPuntaje",function(req, res, next){
+    const {id_juegos, id_color, puntaje } = req.body
+    const sql = `INSERT INTO puntajes (id_juegos, id_color, puntaje) VALUES (?, ?, ? )`
 
+    con.query(sql, [ id_juegos, id_color, puntaje], function(error, result){
+        if(error){
+            res.json({
+          status:"error",
+             error  
+            })  
+       
+        } else {
+            res.json({
+                status:"ok"
+            })
+        }
+    })
+})
+
+   
+
+ 
 module.exports = router;
