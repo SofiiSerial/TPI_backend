@@ -11,36 +11,6 @@ const getToken = function(){
 
 };
 
-/*
-    {id_juego, color1_id, color1_puntaje, color2_id, color2_puntaje, color3_id, color3_puntaje}
-
-    funcion guardarPuntaje 
-
-SELECT id_color , SUM(puntaje) FROM `puntaje` WHERE id_color = 3; 
-*/
-
-/*
-const guardarPuntaje = function (id_juego, color_id, puntaje){
-    return new Promise((resolve, reject) => {
-        // sql insert 
-       const sql = "INSERT INTO puntajes (id_juegos, id_color, puntaje) VALUES (?, ?, ?)"
-       con.query(sql, [id_juego, color_id, puntaje], function(error, result){
-            if(error){
-                res.json({
-                    status:"error",
-                    error
-                })
-            }else{
-
-                res.json({
-                    status:"puntaje",
-                    puntaje: result
-                })
-            }
-        })
-    })
-}*/
-
  //llamar guardar puntaje para cada color
 router.get("/buscar",function(req, res, next){
     const {} = req.query
@@ -101,8 +71,27 @@ router.post("/guardarPuntaje",function(req, res, next){
         }
     })
 })
+/*
+router.put("/",function(req, res, next){
+    const {id} = req.query; //es la tabla donde queremos cambiar los datos
+    const {id_juegos, id_color, puntaje} = req.body; //recibe los datos que qiere cambiar
+    const sql = 'UPDATE puntaje SET id_juegos = ?, id_color = ?, punteje = ? WHERE id = ?'
 
-   
-
+    con.query(sql, [id_juegos, id_color, puntaje, id], function(error, result){
+        if(error){
+            res.json({
+          status:"error",
+             error  
+            })  
+       
+        } else {
+            res.json({
+                status:"ok",
+                msj:{ }
+            })
+        }
+    })
+})  
+*/
  
 module.exports = router;

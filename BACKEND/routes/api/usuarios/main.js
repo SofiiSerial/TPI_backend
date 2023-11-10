@@ -37,7 +37,7 @@ router.get("/buscar",function(req, res, next){
     const {token} = req.headers
     isAdmin(token)
     .then((tipo) => {
-        const sql=`SELECT U.nombre_apellido, U.dni, U.rol, C.color FROM usuarios AS U 
+        const sql=`SELECT U.nombre, U.apellido, U.usuario, U.dni, U.rol, U.contraseña, U.token C.color FROM usuarios AS U 
         INNER JOIN colores AS C ON U.id_color = C.id_color
         WHERE U.dni = ?`
         con.query(sql, [dni], function(error, result){
@@ -60,7 +60,7 @@ router.get("/buscar",function(req, res, next){
 
 //relacionamos la tabla colores con usuario
 router.get("/",function(req, res, next){
-    const sql=`SELECT U.nombre_apellido, U.dni, U.rol, C.color FROM usuarios AS U 
+    const sql=`SELECT U.nombre, U.apellido, U.usuario, U.dni, U.rol, U.contraseña, U.token C.color FROM usuarios AS U 
     INNER JOIN colores AS C ON U.id_color = C.id_color`
     con.query(sql, function(error, result){
         if(error){
@@ -76,22 +76,12 @@ router.get("/",function(req, res, next){
         }
     })
 })
-/*
-const getUsuario = function(user, pass){
-    return new Promise((resolve, reject) => {
-        const sql = 'SELECT * FROM Usuarios WHERE Nombre_usuario = ? AND Contraseña = ?';
-        con.query(sql, [user, pass], function(error, result){
-            if (error) return(reject(error));
-            if (result.llength === 0) return(reject("no existe"));
-            resolve(result[0]);
-        })
-    })
-}
-*/
-const setToken = function(ID_usuario, newToken){
+
+
+const setToken = function(usuario, newToken){
     return new Promise((resolve, reject) =>{
-        const sql = 'UPDATE Usuarios SET token = ? WHERE ID_usuarios = ?';
-        con.query(sql, [newToken, ID_usuario], function(error, result){
+        const sql = 'UPDATE usuarios SET token = ? WHERE id = ?';
+        con.query(sql, [newToken, usuario], function(error, result){
             if (error) return(reject(error));
             resolve();
         })
@@ -100,16 +90,16 @@ const setToken = function(ID_usuario, newToken){
 
 
 router.post("/",function(req, res, next){
-    const { color} = req.body
-    console.log({ color});
+    const {  nombre, apellido, usuario, dni, contraseñ, rol,id_color} = req.body
+    console.log({  nombre, apellido, usuario, dni, contraseñ, rol, token, id_color});
     const {token} = req.headers
     isAdmin(token)
     .then((tipo) => {
         if (tipo === "Admin"){
 
-            const sql = 'INSERT INTO colores ( color) VALUES (?)'
+            const sql = 'INSERT INTO usuarios ( nombre, apellido, usuario, dni, contraseñ, rol, token, id_color) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
             
-            con.query(sql, [ color], function(error, result){
+            con.query(sql, [ nombre, apellido, usuario, dni, contraseñ, rol, token, id_color], function(error, result){
                 if(error){
                     res.json({
                         status:"error",
@@ -118,8 +108,8 @@ router.post("/",function(req, res, next){
            
                 } else {
                     res.json({
-                        status:"colores",
-                        msj:{ color}
+                        status:"usuarios",
+                        msj:{ok}
                     })
                 }
             })
@@ -133,13 +123,13 @@ router.post("/",function(req, res, next){
     }) 
     
 })
-
+/*
 router.put("/",function(req, res, next){
-    const {id_color} = req.query;
-    const {color} = req.body;
-    const sql = 'UPDATE colores SET color = ? WHERE id_color = ?'
+    const {admin} = req.query;
+    const {} = req.body;
+    const sql = 'UPDATE usuario SET color = ? WHERE id_color = ?'
 
-    con.query(sql, [ color, id_color], function(error, result){
+    con.query(sql, [ nombre, apellido, usuario, dni, contraseñ, rol, token, id_color], function(error, result){
         if(error){
             res.json({
           status:"error",
@@ -154,16 +144,29 @@ router.put("/",function(req, res, next){
         }
     })
 })
+*/
+const getUsuario = function(user, pass){
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM usuarios WHERE usuario= ? AND contraseña = ?';
+        con.query(sql, [user, pass], function(error, result){
+            if (error) return(reject(error));
+            if (result.llength === 0) return(reject("no existe"));
+            resolve(result[0]);
+        })
+    })
+}
 
-/*
 router.post("/login",function(req, res, next){
     const{user, pass} = req.body;
+    console.log(req.query);
     getUsuario(user, pass)
     .then(async (user)=> {
         const newToken = getToken();
-        await setToken(user.ID_usuario, newToken);
-        user.newToken = newToken;
+        console.log(user);
+        await setToken(user.id, newToken);
+        user.token = newToken;
         delete user.contraseña;
+        //delete user.token;
         res.json({
             status:"usuarios",
             msj: (user)
@@ -176,7 +179,5 @@ router.post("/login",function(req, res, next){
         })
     })
 })
-   
 
-*/
 module.exports = router;
