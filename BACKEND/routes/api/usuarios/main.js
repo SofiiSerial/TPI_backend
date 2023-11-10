@@ -5,7 +5,7 @@ var con = require('../conexion');
 
 const isAdmin = function(token){
     return new Promise((resolve, reject) => {
-        const sql = 'SELECT tipo FROM Usuarios WHERE token = ?';
+        const sql = 'SELECT tipo FROM usuarios WHERE token = ?';
         con.query(sql, [token], function(error, result, cant){
 
             if(error){

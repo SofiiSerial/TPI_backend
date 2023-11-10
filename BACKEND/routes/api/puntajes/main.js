@@ -71,7 +71,7 @@ router.post("/guardarPuntaje",function(req, res, next){
         }
     })
 })
-/*
+
 router.put("/",function(req, res, next){
     const {id} = req.query; //es la tabla donde queremos cambiar los datos
     const {id_juegos, id_color, puntaje} = req.body; //recibe los datos que qiere cambiar
@@ -92,6 +92,6 @@ router.put("/",function(req, res, next){
         }
     })
 })  
-*/
- 
+
+
 module.exports = router;
