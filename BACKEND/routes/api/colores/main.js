@@ -70,8 +70,8 @@ router.post("/",function(req, res, next){
 })
 
 router.put("/",function(req, res, next){
-    const {id_color} = req.query;
-    const {color} = req.body;
+    //const {id_color} = req.query;
+    const {id_color, color} = req.body;
     const sql = 'UPDATE colores SET color = ? WHERE id_color = ?'
 
     con.query(sql, [ color, id_color], function(error, result){

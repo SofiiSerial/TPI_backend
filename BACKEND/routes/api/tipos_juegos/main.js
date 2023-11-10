@@ -71,4 +71,26 @@ router.post("/",function(req, res, next){
     })
 })
 
+
+router.put("/",function(req, res, next){
+    //const {id} = req.query; //es la tabla donde queremos cambiar los datos
+    const {id, deporte, descripcion} = req.body; //recibe los datos que qiere cambiar
+    const sql = 'UPDATE tipos_juegos SET deporte = ?, descripcion = ? WHERE id = ?'
+
+    con.query(sql, [deporte, descripcion, id], function(error, result){
+        if(error){
+            res.json({
+          status:"error",
+             error  
+            })  
+       
+        } else {
+            res.json({
+                status:"ok",
+                msj:{ }
+            })
+        }
+    })
+}) 
+
 module.exports = router;

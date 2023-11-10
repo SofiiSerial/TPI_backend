@@ -73,11 +73,11 @@ router.post("/guardarPuntaje",function(req, res, next){
 })
 
 router.put("/",function(req, res, next){
-    const {id} = req.query; //es la tabla donde queremos cambiar los datos
-    const {id_juegos, id_color, puntaje} = req.body; //recibe los datos que qiere cambiar
-    const sql = 'UPDATE puntaje SET id_juegos = ?, id_color = ?, punteje = ? WHERE id = ?'
+    //const {id} = req.query; //es la tabla donde queremos cambiar los datos
+    const {id, puntaje} = req.body; //recibe los datos que qiere cambiar
+    const sql = 'UPDATE puntajes SET puntaje = ? WHERE id = ?'
 
-    con.query(sql, [id_juegos, id_color, puntaje, id], function(error, result){
+    con.query(sql, [puntaje, id], function(error, result){
         if(error){
             res.json({
           status:"error",

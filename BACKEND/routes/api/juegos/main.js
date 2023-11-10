@@ -111,11 +111,11 @@ router.post("/",function(req, res, next){
 
  
 router.put("/",function(req, res, next){
-    const {id_juegos} = req.query; //es la tabla donde queremos cambiar los datos
-    const { id_tipo, dia, hora, lugar, ganador, turno} = req.body; //recibe los datos que qiere cambiar
-    const sql = 'UPDATE juegos SET id_tipo = ?, dia = ?, hora = ?, lugar = ?, ganador = ?, turno = ? WHERE id_juegos = ?'
+   //const {id_juegos} = req.query; //es la tabla donde queremos cambiar los datos
+    const { id_juegos, dia, hora, lugar, ganador, turno} = req.body; //recibe los datos que qiere cambiar
+    const sql = 'UPDATE juegos SET  dia = ?, hora = ?, lugar = ?, ganador = ?, turno = ? WHERE id_juegos = ?'
 
-    con.query(sql, [ id_tipo, dia, hora, lugar, ganador, turno, id_juegos], function(error, result){
+    con.query(sql, [ dia, hora, lugar, ganador, turno, id_juegos], function(error, result){
         if(error){
             res.json({
           status:"error",
