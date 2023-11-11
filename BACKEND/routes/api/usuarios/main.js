@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router();
 var con = require('../conexion');
 
-
 const isAdmin = function(token){
     return new Promise((resolve, reject) => {
         const sql = 'SELECT tipo FROM usuarios WHERE token = ?';
@@ -123,28 +122,7 @@ router.post("/",function(req, res, next){
     }) 
     
 })
-/*
-router.put("/",function(req, res, next){
-    const {admin} = req.query;
-    const {} = req.body;
-    const sql = 'UPDATE usuario SET color = ? WHERE id_color = ?'
 
-    con.query(sql, [ nombre, apellido, usuario, dni, contraseñ, rol, token, id_color], function(error, result){
-        if(error){
-            res.json({
-          status:"error",
-             error  
-            })  
-       
-        } else {
-            res.json({
-                status:"colores",
-                msj:{descripcion, tipo}
-            })
-        }
-    })
-})
-*/
 const getUsuario = function(user, pass){
     return new Promise((resolve, reject) => {
         const sql = 'SELECT * FROM usuarios WHERE usuario= ? AND contraseña = ?';

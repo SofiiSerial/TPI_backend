@@ -8,6 +8,7 @@ var puntajesRouter = require('./puntajes/main');
 var coloresRouter = require('./colores/main');
 
 
+
 //http://localhost:3203/api/tipos_juegos
 router.use("/tipos_juegos",tipos_juegosRouter)
 
