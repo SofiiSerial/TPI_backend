@@ -36,7 +36,7 @@ router.get("/buscar",function(req, res, next){
     const {token} = req.headers
     isAdmin(token)
     .then((rol) => {
-        const sql=`SELECT U.nombre, U.apellido, U.usuario, U.dni, U.rol, U.contraseña, U.token C.color FROM usuarios AS U 
+        const sql=`SELECT U.nombre, U.apellido, U.usuario, U.dni, U.rol, C.color FROM usuarios AS U 
         INNER JOIN colores AS C ON U.id_color = C.id_color
         WHERE U.dni = ?`
         con.query(sql, [dni], function(error, result){
@@ -53,7 +53,15 @@ router.get("/buscar",function(req, res, next){
                 })
             }
         })
+
      })
+
+     .catch((error)=> {
+        res.json({
+            status:"error",
+            error  
+        })  
+    }) 
 })
 
 

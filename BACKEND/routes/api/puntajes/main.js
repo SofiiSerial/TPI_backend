@@ -2,14 +2,6 @@ var express = require('express');
 var router = express.Router();
 var con = require('../conexion');
 
-const rand = function(){
-    return Math.random().toString(36).substr(2);
-};
-
-const getToken = function(){
-    return rand() + rand ();
-
-};
 
 const isAdmin = function(token){
     return new Promise((resolve, reject) => {
@@ -105,26 +97,6 @@ router.post("/",function(req, res, next){
     }) 
     
 })
-
-/*
-router.post("/guardarPuntaje",function(req, res, next){
-    const {id_juegos, id_color, puntaje } = req.body
-    const sql = `INSERT INTO puntajes (id_juegos, id_color, puntaje) VALUES (?, ?, ? )`
-
-    con.query(sql, [ id_juegos, id_color, puntaje], function(error, result){
-        if(error){
-            res.json({
-          status:"error",
-             error  
-            })  
-       
-        } else {
-            res.json({
-                status:"ok"
-            })
-        }
-    })
-})*/
 
 router.put("/",function(req, res, next){
     //const {id} = req.query; //es la tabla donde queremos cambiar los datos

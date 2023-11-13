@@ -2,14 +2,6 @@ var express = require('express');
 var router = express.Router();
 var con = require('../conexion');
 
-const rand = function(){
-    return Math.random().toString(36).substr(2);
-};
-
-const getToken = function(){
-    return rand() + rand ();
-
-};
 
 const isAdmin = function(token){
     return new Promise((resolve, reject) => {

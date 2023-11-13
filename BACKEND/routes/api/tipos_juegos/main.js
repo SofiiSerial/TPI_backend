@@ -2,15 +2,6 @@ var express = require('express');
 var router = express.Router();
 var con = require('../conexion');
 
-const rand = function(){
-    return Math.random().toString(36).substr(2);
-};
-
-const getToken = function(){
-    return rand() + rand ();
-
-};
-
 //aca extraemos la informacion con el id_tipos_juegos de la persona
 router.get("/buscar",function(req, res, next){
     const {id} = req.query
@@ -56,7 +47,7 @@ router.get("/",function(req, res, next){
 
 const isAdmin = function(token){
     return new Promise((resolve, reject) => {
-        const sql = 'SELECT tipo FROM tipos_juegos WHERE token = ?';
+        const sql = 'SELECT rol FROM usuarios WHERE token = ?';
         con.query(sql, [token], function(error, result, cant){
        
             if(error){
@@ -65,7 +56,7 @@ const isAdmin = function(token){
         
             } else {
                 if (result.length === 0)return( reject("No existe"));
-                resolve(result[0].tipo); 
+                resolve(result[0].rol); 
             
             }
 
@@ -77,9 +68,9 @@ router.post("/",function(req, res, next){
     const {deporte, descripcion } = req.body
     const {token} = req.headers
     isAdmin(token)
-    .then((tipo) => {
-        console.log(tipo);
-        if (tipo === "admin"){
+    .then((rol) => {
+        console.log(rol);
+        if (rol === "admin"){
             const sql = 'INSERT INTO tipos_juegos (deporte, descripcion) VALUES (?, ?)'
 
             
