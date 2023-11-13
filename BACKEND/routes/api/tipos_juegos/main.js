@@ -52,24 +52,62 @@ router.get("/",function(req, res, next){
     })
 })
 
-router.post("/",function(req, res, next){
-    const {deporte, descripcion} = req.body
-    const sql = `INSERT INTO tipos_juegos (deporte, descripcion) VALUES (?, ?)`
 
-    con.query(sql, [deporte, descripcion ], function(error, result){
-        if(error){
-            res.json({
-          status:"error",
-             error  
-            })  
+
+const isAdmin = function(token){
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT tipo FROM tipos_juegos WHERE token = ?';
+        con.query(sql, [token], function(error, result, cant){
        
-        } else {
-            res.json({
-                status:"ok"
+            if(error){
+                
+                reject(error);  
+        
+            } else {
+                if (result.length === 0)return( reject("No existe"));
+                resolve(result[0].tipo); 
+            
+            }
+
+        })
+    })
+}
+
+router.post("/",function(req, res, next){
+    const {deporte, descripcion } = req.body
+    const {token} = req.headers
+    isAdmin(token)
+    .then((tipo) => {
+        console.log(tipo);
+        if (tipo === "admin"){
+            const sql = 'INSERT INTO tipos_juegos (deporte, descripcion) VALUES (?, ?)'
+
+            
+            con.query(sql, [deporte, descripcion], function(error, result){
+                if(error){
+                    res.json({
+                        status:"error",
+                        error  
+                    })  
+           
+                } else {
+                    res.json({
+                        status:"tipos_juegos",
+                        msj:"ok"
+                    })
+                }
             })
         }
     })
+    .catch((error)=> {
+        res.json({
+            status:"error",
+            error  
+        })  
+    }) 
+    
 })
+
 
 
 router.put("/",function(req, res, next){

@@ -4,7 +4,7 @@ var con = require('../conexion');
 
 const isAdmin = function(token){
     return new Promise((resolve, reject) => {
-        const sql = 'SELECT tipo FROM usuarios WHERE token = ?';
+        const sql = 'SELECT rol FROM usuarios WHERE token = ?';
         con.query(sql, [token], function(error, result, cant){
 
             if(error){
@@ -12,8 +12,8 @@ const isAdmin = function(token){
         
             } else {
 
-                if (result.length === 0)return( reject("No existe"));
-                resolve(result[0].tipo); 
+            if (result.length === 0)return( reject("No existe"));
+             resolve(result[0].rol); 
             
             }
 
@@ -35,7 +35,7 @@ router.get("/buscar",function(req, res, next){
     const {dni} = req.query 
     const {token} = req.headers
     isAdmin(token)
-    .then((tipo) => {
+    .then((rol) => {
         const sql=`SELECT U.nombre, U.apellido, U.usuario, U.dni, U.rol, U.contraseña, U.token C.color FROM usuarios AS U 
         INNER JOIN colores AS C ON U.id_color = C.id_color
         WHERE U.dni = ?`
@@ -93,8 +93,8 @@ router.post("/",function(req, res, next){
     console.log({  nombre, apellido, usuario, dni, contraseñ, rol, token, id_color});
     const {token} = req.headers
     isAdmin(token)
-    .then((tipo) => {
-        if (tipo === "Admin"){
+    .then((rol) => {
+        if (rol === "Admin"){
 
             const sql = 'INSERT INTO usuarios ( nombre, apellido, usuario, dni, contraseñ, rol, token, id_color) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
             
