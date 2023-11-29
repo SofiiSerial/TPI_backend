@@ -12,7 +12,7 @@ const isAdmin = function(token){
         
             } else {
 
-            if (result.length === 0)return( reject("No existe"));
+            if (result.length === 0)return( reject("No existe el token"));
              resolve(result[0].rol); 
             
             }
@@ -32,14 +32,15 @@ const getToken = function(){
 
 //aca extraemos la informacion con el dni de la persona
 router.get("/buscar",function(req, res, next){
-    const {dni} = req.query 
+    const {documento} = req.query 
     const {token} = req.headers
+
     isAdmin(token)
     .then((rol) => {
         const sql=`SELECT U.nombre, U.apellido, U.usuario, U.dni, U.rol, C.color FROM usuarios AS U 
         INNER JOIN colores AS C ON U.id_color = C.id_color
         WHERE U.dni = ?`
-        con.query(sql, [dni], function(error, result){
+        con.query(sql, [documento], function(error, result){
             if(error){
                 res.json({
                     status:"error",
@@ -64,10 +65,37 @@ router.get("/buscar",function(req, res, next){
     }) 
 })
 
+//aca extraemos el color con el dni de la persona
+router.get("/buscarcolor",function(req, res, next){
+    const {documento} = req.query;
+
+        const sql=`SELECT U.nombre, U.apellido, U.usuario, U.dni, U.rol, C.color FROM usuarios AS U 
+        INNER JOIN colores AS C ON U.id_color = C.id_color
+        WHERE U.dni = ?`;
+        con.query(sql, [documento], function(error, result){
+            if(error){
+                res.json({
+                    status:"error",
+                    error
+                })
+            }else{
+
+                console.log(result);
+
+                res.json({
+                    status:"ok",
+                    resultado: result
+                })
+            }
+        })
+
+})
+
+
 
 //relacionamos la tabla colores con usuario
 router.get("/",function(req, res, next){
-    const sql=`SELECT U.nombre, U.apellido, U.usuario, U.dni, U.rol, U.contraseña, U.token C.color FROM usuarios AS U 
+    const sql=`SELECT U.nombre, U.apellido, U.usuario, U.dni, U.rol, U.contraseña, U.token, C.color FROM usuarios AS U 
     INNER JOIN colores AS C ON U.id_color = C.id_color`
     con.query(sql, function(error, result){
         if(error){
@@ -85,6 +113,7 @@ router.get("/",function(req, res, next){
 })
 
 
+
 const setToken = function(usuario, newToken){
     return new Promise((resolve, reject) =>{
         const sql = 'UPDATE usuarios SET token = ? WHERE id = ?';
@@ -97,16 +126,16 @@ const setToken = function(usuario, newToken){
 
 
 router.post("/",function(req, res, next){
-    const {  nombre, apellido, usuario, dni, contraseñ, rol,id_color} = req.body
-    console.log({  nombre, apellido, usuario, dni, contraseñ, rol, token, id_color});
+    const {  nombre, apellido, usuario, dni, contraseña, rol,id_color} = req.body
+    console.log({  nombre, apellido, usuario, dni, contraseña, rol, token, id_color});
     const {token} = req.headers
     isAdmin(token)
     .then((rol) => {
         if (rol === "Admin"){
 
-            const sql = 'INSERT INTO usuarios ( nombre, apellido, usuario, dni, contraseñ, rol, token, id_color) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
+            const sql = 'INSERT INTO usuarios ( nombre, apellido, usuario, dni, contraseña, rol, token, id_color) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
             
-            con.query(sql, [ nombre, apellido, usuario, dni, contraseñ, rol, token, id_color], function(error, result){
+            con.query(sql, [ nombre, apellido, usuario, dni, contraseña, rol, token, id_color], function(error, result){
                 if(error){
                     res.json({
                         status:"error",
@@ -155,7 +184,7 @@ router.post("/login",function(req, res, next){
         //delete user.token;
         res.json({
             status:"usuarios",
-            msj: (user)
+            user
         })
     })
     .catch((error) =>{
