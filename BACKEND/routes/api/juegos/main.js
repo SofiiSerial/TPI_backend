@@ -23,8 +23,8 @@ const isAdmin = function(token){
 }
 
 
-//aca extraemos la informacion con el dni de la persona
-router.get("/buscar",function(req, res, next){
+//para buscae un juego por tipo de juegos
+router.get("/buscarTiposJuegos",function(req, res, next){
     const {id_tipo} = req.query
     const sql=`SELECT J.id_juegos, J.dia, J.hora, J.lugar, J.ganador, J.turno, T.deporte, T.descripcion
     FROM juegos AS J LEFT JOIN tipos_juegos AS T ON J.id_tipo = T.id WHERE T.id = ?`
@@ -44,8 +44,6 @@ router.get("/buscar",function(req, res, next){
     })
 })
 
-
-//relacionamos la tabla colores con usuario
 router.get("/",function(req, res, next){
     const sql=`SELECT J.id_juegos, J.dia, J.hora, J.lugar, J.ganador, J.turno, T.deporte, T.descripcion
     FROM juegos AS J LEFT JOIN tipos_juegos AS T ON J.id_tipo = T.id`
@@ -74,7 +72,6 @@ router.post("/",function(req, res, next){
         console.log(rol);
         if (rol === "admin"){
             const sql = 'INSERT INTO juegos (id_tipo, dia, hora, lugar, ganador, turno) VALUES (?, ?, ?, ?, ?, ?)'
-
             
             con.query(sql, [id_tipo, dia, hora, lugar, ganador, turno], function(error, result){
                 if(error){

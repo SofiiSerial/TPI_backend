@@ -2,35 +2,6 @@ var express = require('express');
 var router = express.Router();
 var con = require('../conexion');
 
-const isAdmin = function(token){
-    return new Promise((resolve, reject) => {
-        const sql = 'SELECT rol FROM usuarios WHERE token = ?';
-        con.query(sql, [token], function(error, result, cant){
-
-            if(error){
-                reject(error);  
-        
-            } else {
-
-            if (result.length === 0)return( reject("No existe el token"));
-             resolve(result[0].rol); 
-            
-            }
-
-        })
-    })
-}
-
-const rand = function(){
-    return Math.random().toString(36).substr(2);
-};
-
-const getToken = function(){
-    return rand() + rand ();
-
-};
-
-//aca extraemos la informacion con el dni de la persona
 router.get("/buscar",function(req, res, next){
     const {documento} = req.query 
     const {token} = req.headers
@@ -71,7 +42,11 @@ router.get("/buscarcolor",function(req, res, next){
 
         const sql=`SELECT U.nombre, U.apellido, U.usuario, U.dni, U.rol, C.color FROM usuarios AS U 
         INNER JOIN colores AS C ON U.id_color = C.id_color
-        WHERE U.dni = ?`;
+        WHERE U.dni = ?`; 
+        //
+        //const {usuario, contrasenia} = req.query;
+
+        // WHERE U.usuario = ? and U.contrasenia =?`; 
         con.query(sql, [documento], function(error, result){
             if(error){
                 res.json({
@@ -91,11 +66,9 @@ router.get("/buscarcolor",function(req, res, next){
 
 })
 
-
-
 //relacionamos la tabla colores con usuario
 router.get("/",function(req, res, next){
-    const sql=`SELECT U.nombre, U.apellido, U.usuario, U.dni, U.rol, U.contraseña, U.token, C.color FROM usuarios AS U 
+    const sql=`SELECT U.nombre, U.apellido, U.usuario, U.dni, U.rol, U.contrasenia, U.token, C.color FROM usuarios AS U 
     INNER JOIN colores AS C ON U.id_color = C.id_color`
     con.query(sql, function(error, result){
         if(error){
@@ -112,8 +85,6 @@ router.get("/",function(req, res, next){
     })
 })
 
-
-
 const setToken = function(usuario, newToken){
     return new Promise((resolve, reject) =>{
         const sql = 'UPDATE usuarios SET token = ? WHERE id = ?';
@@ -123,7 +94,6 @@ const setToken = function(usuario, newToken){
         })
     })
 }
-
 
 router.post("/",function(req, res, next){
     const {  nombre, apellido, usuario, dni, contraseña, rol,id_color} = req.body
@@ -162,7 +132,7 @@ router.post("/",function(req, res, next){
 
 const getUsuario = function(user, pass){
     return new Promise((resolve, reject) => {
-        const sql = 'SELECT * FROM usuarios WHERE usuario= ? AND contraseña = ?';
+        const sql = 'SELECT * FROM usuarios WHERE usuario= ? AND contrasenia = ?';
         con.query(sql, [user, pass], function(error, result){
             if (error) return(reject(error));
             if (result.llength === 0) return(reject("no existe"));
@@ -170,6 +140,33 @@ const getUsuario = function(user, pass){
         })
     })
 }
+
+const isAdmin = function(token){
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT rol FROM usuarios WHERE token = ?';
+        con.query(sql, [token], function(error, result, cant){
+
+            if(error){
+                reject(error);  
+        
+            } else {
+
+            if (result.length === 0)return( reject("No existe el token"));
+             resolve(result[0].rol); 
+            
+            }
+
+        })
+    })
+}
+
+const rand = function(){
+    return Math.random().toString(36).substr(2);
+};
+
+const getToken = function(){
+    return rand() + rand ();
+};
 
 router.post("/login",function(req, res, next){
     const{user, pass} = req.body;
@@ -180,16 +177,16 @@ router.post("/login",function(req, res, next){
         console.log(user);
         await setToken(user.id, newToken);
         user.token = newToken;
-        delete user.contraseña;
+        delete user.contrasenia;
         //delete user.token;
         res.json({
-            status:"usuarios",
+            status:"Usuarios",
             user
         })
     })
     .catch((error) =>{
         res.json({
-            status:"error",
+            status:"error de algo",
             error
         })
     })
