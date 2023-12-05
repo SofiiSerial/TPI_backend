@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var con = require('../conexion');
 
-
+//tiene que mostrar los dias de la semana con los juegos y el admin tiene q tener acceso para modificar
 const isAdmin = function(token){
     return new Promise((resolve, reject) => {
         const sql = 'SELECT rol FROM usuarios WHERE token = ?';

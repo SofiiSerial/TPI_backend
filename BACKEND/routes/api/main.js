@@ -18,7 +18,7 @@ router.use("/usuarios",usuariosRouter)
 //http://localhost:3203/api/juegos
 router.use("/juegos",juegosRouter)
 
-//http://localhost:3203/api/puntejes
+//http://localhost:3203/api/puntajes
 router.use("/puntajes",puntajesRouter)
 
 //http://localhost:3203/api/colores

@@ -133,9 +133,11 @@ router.post("/",function(req, res, next){
 const getUsuario = function(user, pass){
     return new Promise((resolve, reject) => {
         const sql = 'SELECT * FROM usuarios WHERE usuario= ? AND contrasenia = ?';
+        console.log("Consulta: "+sql+" usuario: "+user+" contrasenia: "+pass);
         con.query(sql, [user, pass], function(error, result){
             if (error) return(reject(error));
-            if (result.llength === 0) return(reject("no existe"));
+            if (result.length === 0) return(reject("no existe"));
+            console.log(result[0]);
             resolve(result[0]);
         })
     })
@@ -169,12 +171,16 @@ const getToken = function(){
 };
 
 router.post("/login",function(req, res, next){
-    const{user, pass} = req.body;
-    console.log(req.query);
+    //const{user, pass} = req.body.params;
+    const  user = req.body.usuario;
+    const pass = req.body.contrasenia;
+
+    //console.log(req.body.params,user,pass);
     getUsuario(user, pass)
+    
     .then(async (user)=> {
         const newToken = getToken();
-        console.log(user);
+        console.log("usuario "+user);
         await setToken(user.id, newToken);
         user.token = newToken;
         delete user.contrasenia;
@@ -185,6 +191,7 @@ router.post("/login",function(req, res, next){
         })
     })
     .catch((error) =>{
+        console.log(error);
         res.json({
             status:"error de algo",
             error
