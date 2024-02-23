@@ -120,9 +120,8 @@ router.put("/",function(req, res, next){
 })  
 
 
-//SELECT C.color, SUM(P.puntaje) AS puntajes FROM puntajes AS P INNER JOIN colores AS C ON P.id_color = C.id_color GROUP BY P.id_color ORDER BY puntajes DESC LIMIT 1;
 router.get("/ganador",function(req, res, next){
-    //const {} = req.query
+
     const sql=`SELECT
          C.color, SUM(P.puntaje) AS puntaje 
          FROM puntajes AS P 

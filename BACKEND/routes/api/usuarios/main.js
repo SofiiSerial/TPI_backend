@@ -66,7 +66,7 @@ router.get("/buscarcolor",function(req, res, next){
 
 })
 
-//relacionamos la tabla colores con usuario
+//relacionamos la tabla colores con usuario para saber que id_color tiene cada uno 
 router.get("/",function(req, res, next){
     const sql=`SELECT U.nombre, U.apellido, U.usuario, U.dni, U.rol, U.contrasenia, U.token, C.color FROM usuarios AS U 
     INNER JOIN colores AS C ON U.id_color = C.id_color`
@@ -96,16 +96,17 @@ const setToken = function(usuario, newToken){
 }
 
 router.post("/",function(req, res, next){
-    const {  nombre, apellido, usuario, dni, contraseña, rol,id_color} = req.body
-    console.log({  nombre, apellido, usuario, dni, contraseña, rol, token, id_color});
-    const {token} = req.headers
-    isAdmin(token)
+    const {  nombre, apellido, usuario, dni, contrasenia, rol,id_color} = req.body
+    console.log({  nombre, apellido, usuario, dni, contrasenia, rol, id_color});
+    //const {token} = req.headers
+    //console.log({token});
+    /*isAdmin(token)
     .then((rol) => {
-        if (rol === "Admin"){
+        if (rol === "Admin"){*/
 
-            const sql = 'INSERT INTO usuarios ( nombre, apellido, usuario, dni, contraseña, rol, token, id_color) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
+            const sql = 'INSERT INTO usuarios ( nombre, apellido, usuario, dni, contrasenia, rol, id_color) VALUES (?, ?, ?, ?, ?, ?, ?)'
             
-            con.query(sql, [ nombre, apellido, usuario, dni, contraseña, rol, token, id_color], function(error, result){
+            con.query(sql, [ nombre, apellido, usuario, dni, contrasenia, rol, id_color], function(error, result){
                 if(error){
                     res.json({
                         status:"error",
@@ -115,18 +116,18 @@ router.post("/",function(req, res, next){
                 } else {
                     res.json({
                         status:"usuarios",
-                        msj:{ok}
+                        msj:"ok"
                     })
                 }
             })
-        }
+        /*}
     })
     .catch((error)=> {
         res.json({
             status:"error",
-            error  
+            error: "no se pudo guardar" 
         })  
-    }) 
+    }) */
     
 })
 
@@ -174,8 +175,7 @@ router.post("/login",function(req, res, next){
     //const{user, pass} = req.body.params;
     const  user = req.body.usuario;
     const pass = req.body.contrasenia;
-
-    //console.log(req.body.params,user,pass);
+    
     getUsuario(user, pass)
     
     .then(async (user)=> {

@@ -3,16 +3,18 @@ var con = require('../conexion');
 var router = express.Router();
 
 const isAdmin = function(token){
+
     return new Promise((resolve, reject) => {
         const sql = 'SELECT tipo FROM usuarios WHERE token = ?';
         con.query(sql, [token], function(error, result, cant){
+            //Esto sugiere que se está utilizando una conexión de base de datos (con) para realizar una consulta. 
 
             if(error){
                 reject(error);  
         
             } else {
 
-                if (result.length === 0)return( reject("No existe"));
+            if (result.length === 0) return( reject("No existe"));
                 resolve(result[0].tipo); 
             
             }

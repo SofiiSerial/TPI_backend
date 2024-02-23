@@ -24,7 +24,6 @@ router.get("/buscar",function(req, res, next){
 })
 
 
-//relacionamos la tabla colores con usuario
 router.get("/",function(req, res, next){
     const sql=`SELECT T.id, T.id, T.descripcion, T.juegos FROM tipos_juegos AS T
     INNER JOIN juegos AS J ON J.id T.id_tipo = J.id`
@@ -103,7 +102,7 @@ router.post("/",function(req, res, next){
 
 router.put("/",function(req, res, next){
     const {id} = req.query; //es la tabla donde queremos cambiar los datos
-    const {deporte, descripcion} = req.body; //recibe los datos que qiere cambiar
+    const {deporte, descripcion} = req.body; //recibe los datos que quiere cambiar
     const sql = 'UPDATE tipos_juegos SET deporte = ?, descripcion = ? WHERE id = ?'
 
     con.query(sql, [deporte, descripcion, id], function(error, result){
